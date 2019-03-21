@@ -3,6 +3,7 @@
 
 /** Ionic CSS Variables **/
 :root {
+  --ion-font-family: 'OpenSans';
   --ion-color-text: #353457;
 
   /** primary **/
@@ -76,4 +77,32 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+}
+
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../assets/fonts/OpenSans-Regular.ttf');
+}
+    
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-weight: bold;
+  src: url('../assets/fonts/OpenSans-Bold.ttf');
+}
+    
+@font-face {
+  font-family: 'OpenSans';
+  font-style: italic;
+  font-weight: normal;
+  src: url('../assets/fonts/OpenSans-Italic.ttf');
+}
+    
+@font-face {
+  font-family: 'OpenSans';
+  font-style: normal;
+  font-weight: light;
+  src: url('../assets/fonts/OpenSans-Light.ttf');
 }

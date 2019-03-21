@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, Routes, Navigation } from '@angular/router';
+import { RouterModule, Routes, Navigation, Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -8,11 +10,10 @@ import { RouterModule, Routes, Navigation } from '@angular/router';
 })
 
 export class LoginPage implements OnInit {
-  loginProvider: any;
-  ngOnInit(): void {
-    throw new Error("Method not implemented.");
-  }
-
+  // ngOnInit(): void {
+  //   throw new Error("Method not implemented.");
+  // }
+  loginService: any;
   private account: any = {
     email: "",
     password: ""
@@ -20,9 +21,10 @@ export class LoginPage implements OnInit {
   private rememberPass: boolean = false;
   private isLoading: boolean = false;
 
-  constructor() { }
+  constructor(private router: Router, private alertController: AlertController) {
+  }
 
-  ionViewDidLoad() {
+  ngOnInit() {
    
     if(localStorage.getItem("rememberPass")=="true"){
     
@@ -38,7 +40,7 @@ export class LoginPage implements OnInit {
   }
 
   doLogin(){
-    this.loginProvider.login(this.account.email, this.account.password).then(result =>{
+    this.loginService.login(this.account.email, this.account.password).then(result =>{
       console.log(result);
       if(result.status == "OK"){
         sessionStorage.setItem("type", result.type);
@@ -75,6 +77,15 @@ export class LoginPage implements OnInit {
 
   togglePass() {
     this.rememberPass =! this.rememberPass;
+  }
+
+  openRegisterPage(){
+    this.router.navigate(['register']);
+  }
+
+  volunteerDashboard() {
+    //go to volunteer dashboard
+    this.router.navigate(['volunteer-dashboard']);
   }
 
 }

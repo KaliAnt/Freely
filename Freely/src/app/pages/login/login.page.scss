@@ -1,21 +1,20 @@
-
-    .login-content{
-
-    
-        z-index: 1;
+       .login-content { 
+            overflow: hidden; 
+        }
 
         .login-box{
             background: white;
-            padding: 20px 20px 10px 20px;
+            padding: 25px 20px 10px 20px;
             max-width: 350px;
             margin-left: auto;
             margin-right: auto;
             margin-top: 10%;
-            height: 100%;
         }
 
         .signIn{
-            
+            border-radius: 20px !important;
+            height: 25px;
+            font-style: normal;
         }
 
         ion-input{
@@ -27,7 +26,6 @@
             text-decoration: underline;
             text-align: center;
             left: 30%;
-
         }
 
         ion-item {
@@ -51,9 +49,8 @@
         }
 
 
-        button {
-
-            border-radius: 16px !important;
+        .button {
+            border-radius: 20px !important;
             height: 25px;
             @font-face {
                 font-family: "OpenSans-Light";
@@ -65,4 +62,4 @@
                 }
         }
 
-    }
+    
