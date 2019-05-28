@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Register</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-slides>
+      <ion-slide>
+        <div class="registerWrapper">
+          <ion-list>             
+            <form [formGroup]="registerForm0" (ngSubmit)="goToActualRegistration()">
+              <ion-item>
+                <ion-label>Type of account</ion-label>
+                <ion-select [(ngModel)]="input.account" name="account" formControlName="account">
+                  <ion-option value="Volunteer">Volunteer</ion-option>
+                  <ion-option value="Company">Company</ion-option>
+                </ion-select>
+              </ion-item>
+              <button ion-button block type="submit" class="submitBtn">Next</button>
+            </form>
+          </ion-list>
+        </div>
+      </ion-slide>
+
+
+
+        <ion-slide *ngIf="input.account == 'Volunteer'">
+            <div class="registerWrapper">
+                <ion-list>
+                  <form [formGroup]="registerForm1" (ngSubmit)="goToActualRegistration2()">                   
+
+                      <ion-item-divider>
+                          <ion-icon item-start name="lock"></ion-icon>
+                          {{ "Account settings" }}
+                        </ion-item-divider>                  
+                      <ion-item>
+                        <ion-input placeholder="EMAIL" [(ngModel)]="volunteer.email" name="email" formControlName="email" type="text" class=""></ion-input>
+                      </ion-item>
+              
+                    <ion-item>
+                      <ion-input placeholder="PASSWORD" [(ngModel)]="volunteer.password" name="password" formControlName="password" type="password"></ion-input>
+                    </ion-item>             
+                   
+
+                    <button ion-button color="button" block type="submit" class="submitBtn">Next</button>
+                    </form>
+                </ion-list>
+              </div>
+        </ion-slide>
+
+        <ion-slide *ngIf="input.account == 'Volunteer'">
+            <div class="registerWrapper">
+                <ion-list>
+                  <form [formGroup]="registerForm2" (ngSubmit)="doRegisterUser()">
+                      <ion-item-divider>
+                          <ion-icon item-start name="person"></ion-icon>
+                          {{ "User info" }}
+                        </ion-item-divider>                    
+                        <ion-item>
+                          <ion-input placeholder="NAME" [(ngModel)]="volunteer.name" name="name" formControlName="name" type="text"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input placeholder="SURNAME" [(ngModel)]="volunteer.surname" name="surname" formControlName="surname" type="text"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-icon item-start name="calendar"></ion-icon>
+                          <ion-input placeholder="BIRTHDATE" [(ngModel)]="volunteer.birthdate" name="birthdate" formControlName="birthdate" type="date"></ion-input>
+                        </ion-item>     
+                        <ion-item>
+                            <ion-input placeholder="DESCRIPTION" [(ngModel)]="volunteer.description" name="description" formControlName="description" type="text"></ion-input>
+                        </ion-item>  
+                    
+                    <button ion-button color="button" block type="submit" class="submitBtn">Next</button>
+                    </form>
+                </ion-list>
+              </div>
+        </ion-slide>
+        
+        
+<!--de aici incep slide-urile de companie--> 
+
+<ion-slide>
+  <div class="registerWrapper">
+      <ion-list>
+        <form [formGroup]="registerForm3" (ngSubmit)="doRegisterCompany()">
+            <ion-item-divider>
+                <ion-icon item-start name="person"></ion-icon>
+                {{ "Organisation info" }}
+              </ion-item-divider>                    
+              <ion-item>
+                <ion-input placeholder="EMAIL" [(ngModel)]="company.email" name="name" formControlName="email" type="text"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input placeholder="PASSWORD" [(ngModel)]="company.password" name="password" formControlName="password" type="password"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input placeholder="NAME" [(ngModel)]="company.name" name="name" formControlName="name" type="text"></ion-input>
+              </ion-item>     
+              <ion-item>
+                  <ion-input placeholder="DESCRIPTION" [(ngModel)]="company.description" name="description" formControlName="description" type="text"></ion-input>
+              </ion-item>  
+          
+          <button ion-button color="button" block type="submit" class="submitBtn">Next</button>
+          </form>
+      </ion-list>
+    </div>
+</ion-slide>
+
+
+    </ion-slides>
+</ion-content>

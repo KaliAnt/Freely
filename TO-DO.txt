@@ -1,0 +1,13 @@
+Server:
+
+Get images and CV
+Upload images and CV
+Edit Description/profile info
+SSL Certificate
+
+APP:
+
+Get images and CV
+Upload images and CV
+Edit Description/profile info
+HTTPS requests

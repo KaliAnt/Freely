@@ -1,0 +1,48 @@
+page-events-dash-board {
+    ion-card-content{
+        width: 330px !important;
+        height: 440px !important;
+        padding: 0px !important;
+        background-color: map-get($colors, primary) !important;    
+    }
+
+    ion-card{
+        border-radius: 2% !important;
+    }
+
+    ion-img{
+        
+        width: 360px !important;
+        height: 86% !important;
+        background: transparent;
+        display: block;
+    }
+
+    .description{
+        color: white;
+        font-size: 20px;
+        padding-left: 10px;
+        padding-top: 5px;
+    }
+
+    .buttons{
+        position: fixed;
+        bottom: 10px;
+        left: 20%;
+
+        button{
+            margin-right: 30px;
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+    }
+
+    .eventDate{
+        color: map-get($colors, third);
+        padding-left: 10px;
+        font-size: 15px;
+        font-weight: bold;
+        padding-bottom: 10px;
+    }
+}

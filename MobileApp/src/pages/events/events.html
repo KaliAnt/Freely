@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Events</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>   
+      <ion-card color="primary" (click)="goToEventDetails(item)" *ngFor="let item of eventList" style="width: 95%">
+        <ion-card-content>
+          <div>
+            <p>Name: {{item.name}}</p>
+            <p>Date: {{item.date}}</p>
+          </div>
+
+          <ion-img class="coverImage" [src]= "getItemImage(item)"></ion-img>
+        </ion-card-content>
+      </ion-card>
+   
+  </ion-list>
+  <ion-fab right bottom>
+    <button (click)="openCreateEventModal()" ion-fab><ion-icon name="add"></ion-icon></button>
+</ion-fab>
+</ion-content>

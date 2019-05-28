@@ -1,0 +1,72 @@
+page-login {
+
+    .login-content{
+
+        
+        background-size: cover;
+        z-index: 1;
+
+        .login-box{
+            background: white;
+            padding: 20px 20px 10px 20px;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10%;
+            height: 100%;
+        }
+
+        .signIn{
+            color: map-get($colors, primary);
+        }
+
+        ion-input{
+            padding: 0px !important;
+        }
+
+        .registerText{
+            font-weight: bold;
+            text-decoration: underline;
+            text-align: center;
+           
+            left: 30%;
+            color:  map-get($colors, primary);
+        }
+
+        ion-item {
+            border-radius: 5px !important;
+            padding-left: 0px !important;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            border-bottom: 0px !important;
+            box-shadow: none !important;
+        }
+
+
+        .passRem{
+            font-size: 1.2em;
+            padding-left: 0.5em;
+            color: map-get($colors, primary);
+        }
+
+        .passItem{
+            padding-left: 20px;
+        }
+
+
+        button {
+            background: map-get($colors, primary);
+            border-radius: 16px !important;
+            height: 25px;
+            @font-face {
+                font-family: "OpenSans-Light";
+                src: url("assets/fonts/OpenSans-Light.ttf") format("ttf");
+                font-weight: normal;
+                }
+                body {
+                    font-family: "OpenSans-Light" !important;
+                }
+        }
+
+    }
+}
