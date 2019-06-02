@@ -1,6 +1,9 @@
 //login
 curl --request POST http://0.0.0.0:5000/loginTest --header "Content-Type:application/json" --data '{"username":"aaaa", "password":"dddd"}'
 
+//get user profile
+
+
 //register user
 curl --request POST http://0.0.0.0:5000/registerUser --header "Content-Type:application/json" --data '{"email":"test", "password":"test", "firstname":"test", "lastname":"test", "birthdate":"01.01.2000", "description":"test!"}'
 
@@ -21,3 +24,6 @@ curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:
 
 //get event
 curl --request GET http://0.0.0.0:5000/getEvents --header "Content-Type:application/json"
+
+//upload file
+curl --request POST http://0.0.0.0:5000/uploadFile --header "Content-Type:application/json" --data '{"type":"profile", "extension":"jpg","email":"test", "file":"000001000001001010101000"}'

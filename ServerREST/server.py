@@ -378,7 +378,8 @@ def modifyStatusForApplication():
         print("[ ERROR ] Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
 
-
+#set a max events list
+#also return picture
 @app.route('/getEvents', methods=['GET'])
 def getEvents():
     try:
@@ -490,6 +491,125 @@ def getUsersForEvent():
 def getAcceptedUsersForEvent():
     pass
 
+@app.route('/uploadFile', methods=['POST'])
+def uploadFile():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid json", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    try:
+        values = [request_dict['type'],
+        request_dict['extension'],
+        request_dict['email']]
+
+        fileblob = request_dict['file']
+
+        if fileblob == "":
+            print("[ ERROR ] Invalid file", sys.stderr)
+            return '{"status":"ERROR"}' 
+
+        for element in values:
+            if element == "":
+                print("[ ERROR ] Invalid val", sys.stderr)
+                return '{"status":"ERROR"}'
+
+        #profile picture
+        if values[0] == "profile":
+            
+            if (values[1] != "jpg" and values[1] != "png"):
+                print("[ ERROR ] Invalid file extension", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            #database processing
+            try:
+                
+                db = get_db()
+                cur = db.cursor()
+                query = 'select userId from Users where email=\'' + values[2] + '\''
+                
+                cur.execute(query)
+                #db.commit()
+                row = cur.fetchone()
+
+                userId = row[0]
+
+                query2 = 'select fileId from UserPicture where userId=\'' + str(userId) + '\''
+                
+                cur.execute(query2)
+                #db.commit()
+                row = cur.fetchone()
+                if row != None:
+                    fileId = str(row[0])
+                    query3 = 'delete from File where Id=\'' + fileId + '\''
+                    cur.execute(query3)
+                    #db.commit()
+
+                    query4 = 'delete from UserPicture where fileId=\'' + fileId + '\''
+                    cur.execute(query4)
+                    #db.commit()
+
+                filename = "picture." + str(userId) + ".pdf"
+
+                db.execute('insert into File (name, file, type) values (?,?,?)', (filename, fileblob, values[1]))
+
+                db.commit()
+
+                query5 = 'select id from File where name=\'' + filename + '\''
+                cur.execute(query5)
+                #db.commit()
+                row = cur.fetchone()
+
+                fileId = row[0]
+
+                db.execute('insert into UserPicture (userId, fileId) values (?,?)', (userId, fileId))
+                db.commit()
+
+                db.close()
+                return '{"status":"OK"}' 
+
+                
+
+            except KeyError:
+                print("Database error", sys.stderr)
+                return '{"status":"ERROR"}'
+
+        #user CV
+        elif values[0] == "CV":
+            user = request_dict['email']
+
+            if user == "":
+                print("[ ERROR ] Invalid user name", sys.stderr)
+                return '{"status":"ERROR"}'
+            
+            #database processing
+
+        #cover for event
+        elif values[0] == "cover":
+            event = request_dict['event']
+
+            if event == "":
+                print("[ ERROR ] Invalid event name", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            #database processing
+
+        #invlaid data
+        else:
+            pass
+            #print("[ ERROR ] Invalid file type", sys.stderr)
+            #return '{"status":"ERROR"}'
+
+        
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    
+
+@app.route('/downloadFile', methods=['GET'])
+def downloadFile():
+    pass
 
 
 if __name__ == '__main__':
