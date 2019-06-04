@@ -13,10 +13,8 @@ curl --request POST http://0.0.0.0:5000/createEvent --header "Content-Type:appli
 //modify event
 curl --request POST http://0.0.0.0:5000/modifyEvent --header "Content-Type:application/json" --data '{"name":"test", "date":"24.01.2018", "organisation":"test", "description":"test event modified!", "category":"IT", "location":"Timisoara"}'
 
-//get one event
-
 //search for event
-
+curl --request GET http://0.0.0.0:5000/searchEvent --header "Content-Type:application/json" --data '{"name":"test"}'
 
 //apply for event
 curl --request POST http://0.0.0.0:5000/createApplication --header "Content-Type:application/json" --data '{"email":"calina.antal", "event":"test", "type":"interested"}'

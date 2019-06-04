@@ -328,17 +328,7 @@ def modifyEvent():
 
 @app.route('/getOneEvent', methods=['GET'])
 def getOneEvent():
-    request_dict = request.get_json()
-    if request_dict == None:
-        print("[ ERROR ] Invalid data", sys.stderr)
-        return '{"status":"ERROR"}'
-
-    try:
-        db = get_db()
-    
-    except KeyError:
-        print("Invalid data", sys.stderr)
-        return '{"status":"ERROR"}'
+    pass
 
 
 @app.route('/searchEvent', methods=['GET'])
@@ -348,8 +338,32 @@ def searchEvent():
         print("[ ERROR ] Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
 
+    name = request_dict["name"]
+
     try:
         db = get_db()
+        cur = db.cursor()
+
+        query = 'select name, description, date, location, organisationId from Events where name like \'' + name + '%\''
+        events = []
+        for row in db.execute(query):
+            cur.execute('select email, name from Organisations where organisationId = ?', (row[4],))
+            curRow = cur.fetchone()
+
+            evt = {
+                "name" : row[0],
+                "description" : row[1],
+                "date" : row[2],
+                "location": row[3],
+                "organisation": curRow[1],
+                "organisationEmail": curRow[0]
+            }
+            events.append(evt)
+        res = jsonify(events)
+        print(res)
+        return res
+
+
     
     except KeyError:
         print("Invalid data", sys.stderr)
@@ -465,15 +479,20 @@ def modifyStatusForApplication():
 def getEvents():
     try:
         db = get_db()
+        cur = db.cursor()
      
-        query = 'select name, description, date, location from Events'
+        query = 'select name, description, date, location, organisationId from Events'
         events = []
         for row in db.execute(query):
+            cur.execute('select email, name from Organisations where organisationId = ?', (row[4],))
+            curRow = cur.fetchone()
             evt = {
                 "name" : row[0],
                 "description" : row[1],
                 "date" : row[2],
-                "location": row[3]
+                "location": row[3],
+                "organisation": curRow[1],
+                "organisationEmail": curRow[0]
             }
             events.append(evt)
         res = jsonify(events)
