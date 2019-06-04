@@ -235,19 +235,19 @@ def createEvent():
         query2 = 'select categoryId from Categories where name=\'' + values[4] + '\''
         query3 = 'select eventId from Events where name=\'' + values[0] + '\''
         
-        
-        event = [request_dict['name'],
-        request_dict['description'],
-        request_dict['date']]
-
-        db.execute('insert into events (name, description, date) values (?,?,?)', event)
-        db.commit()
-        #TO-Do fix this mess. only one value expected!!
-        
         for row in db.execute(query):
             organisationId = row[0]
             break
+        
+        event = [request_dict['name'],
+        request_dict['description'],
+        request_dict['date'],
+        organisationId]
 
+        db.execute('insert into events (name, description, date, organisationId) values (?,?,?,?)', event)
+        db.commit()
+        #TO-Do fix this mess. only one value expected!!
+        
         for row2 in db.execute(query2):
             categoryId = row2[0]
             break
@@ -549,7 +549,7 @@ def uploadFile():
                     cur.execute(query4)
                     #db.commit()
 
-                filename = "picture." + str(userId) + ".pdf"
+                filename = "picture." + values[2] + "." + values[1]
 
                 db.execute('insert into File (name, file, type) values (?,?,?)', (filename, fileblob, values[1]))
 
@@ -567,22 +567,73 @@ def uploadFile():
 
                 db.close()
                 return '{"status":"OK"}' 
-
-                
-
+              
             except KeyError:
                 print("Database error", sys.stderr)
                 return '{"status":"ERROR"}'
 
         #user CV
-        elif values[0] == "CV":
+        elif values[0] == "cv":
             user = request_dict['email']
 
             if user == "":
                 print("[ ERROR ] Invalid user name", sys.stderr)
                 return '{"status":"ERROR"}'
-            
-            #database processing
+
+            if values[1] != "pdf":
+                print("[ ERROR ] Invalid file extension", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            try:
+                db = get_db()
+                cur = db.cursor()
+                query = 'select userId from Users where email=\'' + values[2] + '\''
+                
+                cur.execute(query)
+                #db.commit()
+                row = cur.fetchone()
+
+                userId = row[0]
+
+                query2 = 'select fileId from UserCV where userId=\'' + str(userId) + '\''
+                
+                cur.execute(query2)
+                #db.commit()
+                row = cur.fetchone()
+                if row != None:
+                    fileId = str(row[0])
+                    query3 = 'delete from File where Id=\'' + fileId + '\''
+                    cur.execute(query3)
+                    #db.commit()
+
+                    query4 = 'delete from UserCV where fileId=\'' + fileId + '\''
+                    cur.execute(query4)
+                    #db.commit()
+
+                filename = "cv." + values[2] + "." + values[1]
+
+                db.execute('insert into File (name, file, type) values (?,?,?)', (filename, fileblob, values[1]))
+
+                db.commit()
+
+                query5 = 'select id from File where name=\'' + filename + '\''
+                cur.execute(query5)
+                #db.commit()
+                row = cur.fetchone()
+
+                fileId = row[0]
+
+                db.execute('insert into UserCV (userId, fileId) values (?,?)', (userId, fileId))
+                db.commit()
+
+                db.close()
+                return '{"status":"OK"}' 
+
+                
+            except KeyError:
+                print("Database error", sys.stderr)
+                return '{"status":"ERROR"}'
+
 
         #cover for event
         elif values[0] == "cover":
@@ -592,13 +643,75 @@ def uploadFile():
                 print("[ ERROR ] Invalid event name", sys.stderr)
                 return '{"status":"ERROR"}'
 
+            if values[2] == "":
+                print("[ ERROR ] Invalid user name", sys.stderr)
+                return '{"status":"ERROR"}'
+
             #database processing
+            try:
+                db = get_db()
+                cur = db.cursor()
+                
+                query = 'select organisationId from Organisations where email=\'' + values[2] + '\''
+                
+                cur.execute(query)
+                row = cur.fetchone()
+
+                orgId = row[0]
+                query1 = 'select eventId from Events where organisationId =\'' + str(orgId) + '\' and name=\'' + event + '\''
+                cur.execute(query1)
+                row = cur.fetchone()
+
+                eventId = row[0]
+                
+                if eventId == None:
+                    print("[ ERROR ] Event does not exist", sys.stderr)
+                    return '{"status":"ERROR"}'
+
+
+                query2 = 'select fileId from EventCover where eventId=\'' + str(eventId) + '\''
+                cur.execute(query2)
+
+                row = cur.fetchone()
+
+                if row != None:
+                    fileId = str(row[0])
+                    query3 = 'delete from File where Id=\'' + fileId + '\''
+                    db.execute(query3)
+                    db.commit()
+
+
+                    query4 = 'delete from EventCover where fileId=\'' + fileId + '\''
+                    db.execute(query4)
+                    db.commit()
+
+                filename = "cover." + event + "." + values[2] + "." + values[1]
+
+                db.execute('insert into File (name, file, type) values (?,?,?)', (filename, fileblob, values[1]))
+
+                db.commit()
+
+                query5 = 'select id from File where name=\'' + filename + '\''
+                cur.execute(query5)
+                #db.commit()
+                row = cur.fetchone()
+
+                fileId = row[0]
+
+                db.execute('insert into EventCover (eventId, fileId) values (?,?)', (eventId, fileId))
+                db.commit()
+
+                db.close()
+                return '{"status":"OK"}'
+
+            except KeyError:
+                print("Invalid data", sys.stderr)
+                return '{"status":"ERROR"}'
 
         #invlaid data
         else:
-            pass
-            #print("[ ERROR ] Invalid file type", sys.stderr)
-            #return '{"status":"ERROR"}'
+            print("[ ERROR ] Invalid file type", sys.stderr)
+            return '{"status":"ERROR"}'
 
         
     except KeyError:
@@ -609,8 +722,147 @@ def uploadFile():
 
 @app.route('/downloadFile', methods=['GET'])
 def downloadFile():
-    pass
+    request_dict = request.get_json()
+    
+    if request_dict == None:
+        print("[ ERROR ] Invalid json", sys.stderr)
+        return '{"status":"ERROR"}'
 
+    email = request_dict["email"]
+    requested = request_dict["type"]
+
+    if (email == "" or requested == ""):
+        print("[ ERROR ] Invalid requested data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    try:
+        db = get_db()
+        cur = db.cursor()
+
+        if requested == "picture":
+            query = 'select userId from Users where email=\'' + email + '\''
+            
+            cur.execute(query)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such user exist", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            userId = row[0]
+
+            query1 = 'select fileId from UserPicture where userId=\'' + str(userId) + '\''
+            cur.execute(query1)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such file exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            fileId = row[0]
+
+        elif requested == "cover":
+            event = request_dict["event"]
+            
+            if event == "":
+                print("[ ERROR ] No such event exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            query0 = 'select organisationId from Organisations where email=\'' + email + '\''
+            cur.execute(query0)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such organisation exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            organisationId = row[0]
+
+            query = 'select eventId from Events where name=\'' + event + '\' and organisationId=\'' + str(organisationId) + '\''
+            
+            cur.execute(query)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such event exist", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            eventId = row[0]
+
+
+            query2 = 'select fileId from EventCover where eventId=\'' + str(eventId) + '\''
+            cur.execute(query2)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such file exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            fileId = row[0]
+            query3 = 'select file, type from File where id=\'' + str(fileId) + '\''
+            cur.execute(query3)
+            row = cur.fetchone()
+
+            data = row[0]
+            extension = row[1]
+
+            result = {
+                "event" : event,
+                "extension": extension,
+                "type" : requested,
+                "data" : data,
+                "status" : "OK"
+            }
+            res = jsonify(result)
+            return res
+
+        elif requested == "cv":
+            query = 'select userId from Users where email=\'' + email + '\''
+            
+            cur.execute(query)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such user exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            userId = row[0]
+
+            query1 = 'select fileId from UserCV where userId=\'' + str(userId) + '\''
+            cur.execute(query1)
+            row = cur.fetchone()
+
+            if row == None:
+                print("[ ERROR ] No such file exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            fileId = row[0]
+
+        else:
+            print("Invalid requested data", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        query2 = 'select file, type from File where id=\'' + str(fileId) + '\''
+        cur.execute(query2)
+        row = cur.fetchone()
+
+        data = row[0]
+        extension = row[1]
+
+        result = {
+                "extension": extension,
+                "type" : requested,
+                "data" : data,
+                "status" : "OK"
+        }
+        res = jsonify(result)
+        print(res)
+        return res
+
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+    
 
 if __name__ == '__main__':
     

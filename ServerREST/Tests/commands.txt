@@ -1,9 +1,6 @@
 //login
 curl --request POST http://0.0.0.0:5000/loginTest --header "Content-Type:application/json" --data '{"username":"aaaa", "password":"dddd"}'
 
-//get user profile
-
-
 //register user
 curl --request POST http://0.0.0.0:5000/registerUser --header "Content-Type:application/json" --data '{"email":"test", "password":"test", "firstname":"test", "lastname":"test", "birthdate":"01.01.2000", "description":"test!"}'
 
@@ -25,5 +22,20 @@ curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:
 //get event
 curl --request GET http://0.0.0.0:5000/getEvents --header "Content-Type:application/json"
 
-//upload file
+//upload file - user picture
 curl --request POST http://0.0.0.0:5000/uploadFile --header "Content-Type:application/json" --data '{"type":"profile", "extension":"jpg","email":"test", "file":"000001000001001010101000"}'
+
+//upload file - user cv
+curl --request POST http://0.0.0.0:5000/uploadFile --header "Content-Type:application/json" --data '{"type":"cv", "extension":"pdf","email":"test", "file":"000001000001001010101000"}'
+
+//upload file - event cover
+curl --request POST http://0.0.0.0:5000/uploadFile --header "Content-Type:application/json" --data '{"type":"cover", "extension":"jpg","email":"test", "event":"test", "file":"000001000001001010101000"}'
+
+//download file - user picture
+curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"picture"}'
+
+//download file - user cv
+curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"cv"}'
+
+//download file - event cover
+curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"cover", "event":"test"}'
