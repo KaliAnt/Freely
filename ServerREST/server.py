@@ -217,7 +217,8 @@ def createEvent():
         request_dict['date'],
         request_dict['description'],
         request_dict['organisation'],
-        request_dict['category']]
+        request_dict['category'],
+        request_dict['location']]
 
         #TO-DO description can be null
         for element in values:
@@ -242,9 +243,10 @@ def createEvent():
         event = [request_dict['name'],
         request_dict['description'],
         request_dict['date'],
-        organisationId]
+        organisationId,
+        request_dict['location']]
 
-        db.execute('insert into events (name, description, date, organisationId) values (?,?,?,?)', event)
+        db.execute('insert into events (name, description, date, organisationId, location) values (?,?,?,?,?)', event)
         db.commit()
         #TO-Do fix this mess. only one value expected!!
         
@@ -275,6 +277,85 @@ def createEvent():
     except:
         print("[ ERROR ] Can't insert data in db", sys.stderr)
         return '{"status":"ERROR"}'
+
+@app.route('/modifyEvent', methods=['POST'])
+def modifyEvent():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    event = request_dict["name"]
+    email = request_dict["organisation"]
+    
+    if event == "" or email == "":
+        print("[ ERROR ] Invalid event and email data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    try:
+        db = get_db()
+        cur = db.cursor()
+
+        query = 'select organisationId from Organisations where email = \'' + email + '\''
+        cur.execute(query)
+        row = cur.fetchone()
+
+        if row == None:
+            print("[ ERROR ] No such organisation exists", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        organisationId = row[0]
+
+        query1 = 'select eventId from Events where organisationId=\'' + str(organisationId) + '\' and name = \'' + event + '\''
+
+        cur.execute(query1)
+        row = cur.fetchone()
+
+        if row == None:
+            print("[ ERROR ] No such event exists", sys.stderr)
+            return '{"status":"ERROR"}' 
+
+        eventId = row[0]
+
+        db.execute('update events set name=?, description=?, date=?, location=?  where eventid=?', (request_dict["name"], request_dict["description"], request_dict["date"], request_dict["location"], str(eventId)))
+        db.commit()
+
+        return '{"status":"OK"}'
+    
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+@app.route('/getOneEvent', methods=['GET'])
+def getOneEvent():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    try:
+        db = get_db()
+    
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+
+@app.route('/searchEvent', methods=['GET'])
+def searchEvent():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    try:
+        db = get_db()
+    
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+    
+
 
 @app.route('/createApplication', methods=['POST'])
 def createApplication():
@@ -385,13 +466,14 @@ def getEvents():
     try:
         db = get_db()
      
-        query = 'select name, description, date from Events'
+        query = 'select name, description, date, location from Events'
         events = []
         for row in db.execute(query):
             evt = {
                 "name" : row[0],
                 "description" : row[1],
-                "date" : row[2]
+                "date" : row[2],
+                "location": row[3]
             }
             events.append(evt)
         res = jsonify(events)
