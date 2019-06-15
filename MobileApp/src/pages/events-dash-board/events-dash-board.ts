@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { EventDetailsViewPage } from '../event-details-view/event-details-view'
 import { EventsProvider } from '../../providers/events/events';
 import { Slides } from 'ionic-angular';
 import { ViewChild } from '@angular/core';
-
+import { FreelyEvent } from '../../models/freely-event'
+import { EventListener } from '@angular/core/src/debug/debug_node';
+import { templateJitUrl, removeSummaryDuplicates } from '@angular/compiler';
 /**
  * Generated class for the EventsDashBoardPage page.
  *
@@ -18,41 +21,56 @@ import { ViewChild } from '@angular/core';
 export class EventsDashBoardPage {
 
   @ViewChild(Slides) slides: Slides;
-  private eventsList: Array<any> = [ {
-    name: "DreamArt Festival",
-    description: "Dreaming",
-    date: "12 Dec 2018"
-  },
-  {
-    name: "Spooky Party",
-    description: "Spooky",
-    date: "28 Nov 2018"
-  },
-  {
-    name: "Feel The Real Festival",
-    description: "Real",
-    date: "02 Ian 2019"
-  }];
-
-  private currentEvent: any = {
+  private eventsList: Array<FreelyEvent>;
+  // @ViewChild(Slides) slides: Slides;
+  // private eventsList: Array<any> = [ {
+  //   name: "DreamArt Festival",
+  //   description: "Dreaming",
+  //   date: "12 Dec 2018"
+  // },
+  // {
+  //   name: "Spooky Party",
+  //   description: "Spooky",
+  //   date: "28 Nov 2018"
+  // },
+  // {
+  //   name: "Feel The Real Festival",
+  //   description: "Real",
+  //   date: "02 Ian 2019"
+  // }];
+  
+  private currentEvent: FreelyEvent = {
     name: "Dream festival",
     description: "test",
-    date: "4 - 7 nov 2018"
+    date: "4 - 7 nov 2018",
+    organizer: "ORGANIZER",
+    location: "",
+    organizerEmail: ""
   };
 
   constructor(public eventsProvider: EventsProvider, public navCtrl: NavController, public navParams: NavParams) {
+   
   }
 
+  private getEvents() {
+    this.eventsProvider.getEvents().then(result => {
+      if(result.status == "OK") {
+        try {
+            this.eventsList = result.events;
+          } catch (error) {
+            console.log("invalid event list");
+          }
+        }
+      else{
+        console.log("Invalid event data!");
+      }
+  });
+
+  }
+
+
   getImagePicture(item){
-    if(item.name == "DreamArt Festival"){
       return "assets/imgs/1.jpg";
-    }
-    if(item.name == "Spooky Party"){
-      return "assets/imgs/3.jpg";
-    }
-    if(item.name == "Feel The Real Festival"){
-      return "assets/imgs/2.jpg";
-    }
   }
 
   onClickEvent(type: string){
@@ -68,11 +86,16 @@ export class EventsDashBoardPage {
     this.slides.slideTo(current - 1, 500);
   }
 
+  showEvent(item: any) {
+    this.navCtrl.push(EventDetailsViewPage,{item:item});
+  }
+
   ionViewDidLoad() {
-    this.eventsProvider.getEvents().then(data=>{
-      //this.eventsList = data;
-      //this.currentEvent = this.eventsList[0];
-    });
+    this.getEvents();
+    // this.eventsProvider.getEvents().then(data=>{
+    //    this.eventsList = data;
+    //    this.currentEvent = this.eventsList[0];
+    //  });
   }
 
 }

@@ -25,7 +25,7 @@ curl --request POST http://0.0.0.0:5000/modifyStatusForApplication --header "Con
 //get users for event
 curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:application/json" --data '{"name":"test"}'
 
-//get event
+//get events
 curl --request GET http://0.0.0.0:5000/getEvents --header "Content-Type:application/json"
 
 //upload file - user picture
@@ -45,3 +45,7 @@ curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:appli
 
 //download file - event cover
 curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"cover", "event":"test"}'
+
+//get user details
+
+//get organisation details

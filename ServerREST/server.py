@@ -495,7 +495,12 @@ def getEvents():
                 "organisationEmail": curRow[0]
             }
             events.append(evt)
-        res = jsonify(events)
+        
+        temp = {
+                "events": events,
+                "status": "OK"
+        }
+        res = jsonify(temp)
         print(res)
         return res
     except:

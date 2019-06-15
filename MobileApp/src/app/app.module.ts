@@ -12,6 +12,7 @@ import { EventsPage } from '../pages/events/events';
 import { CreateEventPage } from '../pages/create-event/create-event';
 import { EventManagementPage } from '../pages/event-management/event-management';
 import { EventsDashBoardPage } from '../pages/events-dash-board/events-dash-board';
+import { EventDetailsViewPage} from '../pages/event-details-view/event-details-view';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginProvider } from '../providers/login/login';
@@ -35,7 +36,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
     EventManagementPage,
     EventsDashBoardPage,
     EventOrganizationDescriptionPage,
-    EventParticipantsPage
+    EventParticipantsPage,
+    EventDetailsViewPage
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
     EventManagementPage,
     EventsDashBoardPage,
     EventOrganizationDescriptionPage,
-    EventParticipantsPage
+    EventParticipantsPage,
+    EventDetailsViewPage
   ],
   providers: [
     StatusBar,

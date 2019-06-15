@@ -8,6 +8,7 @@ page-events-dash-board {
 
     ion-card{
         border-radius: 2% !important;
+        background-color: map-get($colors, primary) !important; // black
     }
 
     ion-img{
