@@ -4,7 +4,8 @@ import { RegisterPage } from '../register/register';
 import { LoginProvider } from '../../providers/login/login';
 import { AlertController } from 'ionic-angular';
 import { UserDetailsPage } from '../../pages/user-details/user-details';
-import { OrganizationDetailsPage} from '../../pages/organization-details/organization-details';
+import { OrganizationDetailsPage } from '../../pages/organization-details/organization-details';
+import { FreelyUser } from '../../models/freely-user'
 
 /**
  * Generated class for the LoginPage page.
@@ -76,6 +77,9 @@ export class LoginPage {
           sessionStorage.setItem("name", result.data.name);
         }
         if(sessionStorage.getItem("type") == "volunteer"){
+          localStorage.removeItem("userDAta");
+          localStorage.setItem("userData", JSON.stringify(result.data));
+          console.log(localStorage.getItem("userData"));
           this.navCtrl.setRoot(UserDetailsPage);
         }else{
           this.navCtrl.setRoot(OrganizationDetailsPage);

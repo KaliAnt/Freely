@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
 import { Headers } from '@angular/http';
 import { Subject } from 'rxjs';
-import {Events} from 'ionic-angular/';
+import { Events } from 'ionic-angular/';
 
 export class RequestProviderOptions {
     method: RequestMethod;

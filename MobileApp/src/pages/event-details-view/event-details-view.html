@@ -5,19 +5,34 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>{{eventObj.name}}</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-content>
+
+  <!-- <ion-content>
     <img [src]="getImagePicture()" />
                 <div >{{eventObj.organization}}</div>
                 <div >{{eventObj.date}}</div>
                 <div >{{eventObj.description}}</div>
-  </ion-content>
-  <div class="wrapper">
+  </ion-content> -->
+  
+  <ion-content>
+      <ion-img class="coverImage" [src]="getImagePicture()"></ion-img>
+      
+      <div class="innerContent">
+      <div class="description">
+          <h3 style="color: #353457;">Organized by: <br>{{eventObj.organizer}}</h3>
+          <hr class="logo-separator">
+          <h3 style="color: #353457;">Will take place on: <br>{{eventObj.date}}</h3>
+          <hr class="logo-separator">
+          <h3 style="color: #353457;">Description: <br>{{eventObj.description}}</h3>
+      </div>
+      
+    </div>
+  
+<div class="wrapper">
 
     <button class="button" (click)="onClickEvent('apply')" color="primary" style="font-size: 20px;" ion-button><ion-icon name="arrow-round-up"></ion-icon></button>
     <button class="button" (click)="onClickEvent('favorite')" color="secondary" style="font-size: 20px;" ion-button><ion-icon name="star"></ion-icon></button>
@@ -25,3 +40,4 @@
 
   </div>
 </ion-content>
+

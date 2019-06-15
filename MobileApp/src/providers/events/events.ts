@@ -24,7 +24,6 @@ export class EventsProvider {
       category: category
     }
     return this.requestProvider.buildPost("createEvent", payload, false).map(data => data.json()).toPromise();
-  
   }
 
   getEvents(){

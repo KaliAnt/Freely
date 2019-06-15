@@ -1,5 +1,8 @@
-//login
+//login test
 curl --request POST http://0.0.0.0:5000/loginTest --header "Content-Type:application/json" --data '{"username":"aaaa", "password":"dddd"}'
+
+//login
+curl --request POST http://0.0.0.0:5000/login --header "Content-Type:application/json" --data '{"email":"test", "password":"test"}'
 
 //register user
 curl --request POST http://0.0.0.0:5000/registerUser --header "Content-Type:application/json" --data '{"email":"test", "password":"test", "firstname":"test", "lastname":"test", "birthdate":"01.01.2000", "description":"test!"}'

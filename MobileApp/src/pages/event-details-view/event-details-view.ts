@@ -19,7 +19,6 @@ export class EventDetailsViewPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.eventObj = navParams.get('item');
-    
   }
 
   ionViewDidLoad() {

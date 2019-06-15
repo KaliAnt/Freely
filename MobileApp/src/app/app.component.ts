@@ -83,6 +83,7 @@ export class MyApp {
     }});
     alert.addButton("No");
     alert.present();
+    //localStorage.clear();
   }
 
   initializeApp() {

@@ -64,8 +64,7 @@ export class EventsDashBoardPage {
       else{
         console.log("Invalid event data!");
       }
-  });
-
+    });
   }
 
 
