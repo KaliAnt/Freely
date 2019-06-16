@@ -22,7 +22,8 @@ export class CreateEventPage {
     name: "",
     date: "",
     description: "",
-    category: "Music"
+    category: "Music",
+    location : ""
   }
 
   constructor(private alertController: AlertController, private eventsProvider: EventsProvider, private viewController: ViewController, public navCtrl: NavController, public navParams: NavParams) {
@@ -42,7 +43,7 @@ export class CreateEventPage {
   }
 
   createEvent(){
-    this.eventsProvider.createEvent(this.event.name, this.event.date, sessionStorage.getItem("name"), this.event.description, this.event.category).then(data =>{
+    this.eventsProvider.createEvent(this.event.name, this.event.date, sessionStorage.getItem("name"), this.event.description, this.event.category, this.event.location).then(data =>{
       if(data.status == "OK"){
         this.dismiss();
       }else{

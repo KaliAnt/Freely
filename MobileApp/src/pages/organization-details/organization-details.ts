@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { FreelyOrganization } from '../../models/freely-organization'
 
 /**
  * Generated class for the OrganizationDetailsPage page.
@@ -14,17 +15,24 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class OrganizationDetailsPage {
 
-
-  organizationName: string = "Artsy Events";
-  description: string = "We bring the artsy to the people!";
-  email: string = "artsyevents@gmail.com";
-  phone: string = "0745048848";
-  website: string = "http://www.artsyevents.com";
+  organization: FreelyOrganization = {
+    name: " ",
+    email: " ",
+    description: " ",
+    rating: "5.0"
+  }
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
+    try {
+      if(localStorage.getItem("userData")) {
+        this.organization = JSON.parse(localStorage.getItem("userData"))
+      }
+  } catch (error) {
+      
+  }
     console.log('ionViewDidLoad OrganizationDetailsPage');
   }
 

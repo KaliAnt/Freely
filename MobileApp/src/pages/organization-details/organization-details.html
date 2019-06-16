@@ -10,7 +10,7 @@
     <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>{{organizationName}}</ion-title>
+    <ion-title>{{organization.name}}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -19,21 +19,19 @@
 <ion-content>
       <ion-img class="coverImage" src="assets/imgs/1.jpg"></ion-img>
       <p class="logo-rating" style="text-align:right">
-          5.0 <ion-icon name="star"></ion-icon>
+          {{organization.rating}} <ion-icon name="star"></ion-icon>
       </p>
       <hr class="logo-separator">
       <div class="innerContent">
       <h3 class="info">Description</h3>
       <div class="description">
-          <p>{{description}}</p>
+          <p>{{organization.description}}</p>
       </div>
       
       <h3 class="info">Contact info</h3>
       <div class="contactInfo">
         <ion-item no-lines>
-            <p> <ion-icon name="mail" color="primary"></ion-icon> {{email}}</p>
-            <p> <ion-icon name="call" color="primary"></ion-icon> {{phone}}</p>
-            <p> <ion-icon name="desktop" color="primary"></ion-icon> {{website}}</p>
+            <p> <ion-icon name="mail" color="primary"></ion-icon> {{organization.email}}</p>
         </ion-item>
       </div>
     </div>

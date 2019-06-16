@@ -3,6 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { CreateEventPage } from '../../pages/create-event/create-event';
 import { ModalController } from 'ionic-angular';
 import { EventManagementPage } from '../event-management/event-management';
+import { EventsProvider } from '../../providers/events/events'
+import { FreelyEvent } from '../../models/freely-event';
+
 
 /**
  * Generated class for the EventsPage page.
@@ -17,33 +20,39 @@ import { EventManagementPage } from '../event-management/event-management';
 })
 export class EventsPage {
 
-  private eventList: Array<any> = [{
-    name: 'DreamArt Festival',
-    date: "12 Dec 2018"
-  },{
-    name: 'Spooky Party',
-    date: "28 Nov 2018"
-  },{
-    name: 'Feel The Real Festival',
-    date: "02 Ian 2019"
-  }];
+  
+  private eventList: Array<FreelyEvent>[];
 
-  constructor(private modalController: ModalController, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public eventsProvider: EventsProvider, private modalController: ModalController, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   getItemImage(item){
-    if(item.name == "DreamArt Festival"){
-      return "assets/imgs/1.jpg";
-    }
-    if(item.name == "Spooky Party"){
-      return "assets/imgs/3.jpg";
-    }
-    if(item.name == "Feel The Real Festival"){
-      return "assets/imgs/2.jpg";
-    }
+
+  }
+
+  private getEvents() {
+    var organization = JSON.parse(localStorage.getItem("userData"));
+    this.eventsProvider.getEventsOrganzation(organization.email).then(result => {
+      if(result.status == "OK") {
+        try {
+            console.log("EVENTS req:");
+            console.log(result.events);
+            this.eventList = result.events;
+            console.log("EVENTS:");
+            console.log(this.eventList);
+          } catch (error) {
+            console.log("invalid event list");
+          }
+        }
+      else{
+        console.log("Invalid event data!");
+      }
+    });
+ 
   }
 
   ionViewDidLoad() {
+    this.getEvents();
     console.log('ionViewDidLoad EventsPage');
   }
 

@@ -15,15 +15,23 @@ export class EventsProvider {
     console.log('Hello EventsProvider Provider');
   }
 
-  createEvent(name: string, date: string, organization: string, description: string, category: string){
+  createEvent(name: string, date: string, organization: string, description: string, category: string, location: string){
     var payload ={
       name: name,
       date: date,
       organisation: organization,
       description: description,
-      category: category
+      category: category,
+      location: location
     }
     return this.requestProvider.buildPost("createEvent", payload, false).map(data => data.json()).toPromise();
+  }
+
+  getEventsOrganzation(email: string) {
+    var payload = {
+      email: email
+    }
+    return this.requestProvider.buildPost("getEventsOrganization", payload, false).map(data => data.json()).toPromise();
   }
 
   getEvents(){

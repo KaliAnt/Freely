@@ -31,8 +31,6 @@ export class UserDetailsPage {
     try {
       if(localStorage.getItem("userData")) {
         this.userData = JSON.parse(localStorage.getItem("userData"))
-        console.log("THIS IS THE DATA");
-        console.log(this.userData);   
       }
   } catch (error) {
       

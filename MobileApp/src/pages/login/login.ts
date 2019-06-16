@@ -77,11 +77,12 @@ export class LoginPage {
           sessionStorage.setItem("name", result.data.name);
         }
         if(sessionStorage.getItem("type") == "volunteer"){
-          localStorage.removeItem("userDAta");
+          localStorage.removeItem("userData");
           localStorage.setItem("userData", JSON.stringify(result.data));
-          console.log(localStorage.getItem("userData"));
           this.navCtrl.setRoot(UserDetailsPage);
         }else{
+          localStorage.removeItem("userData");
+          localStorage.setItem("userData", JSON.stringify(result.data));
           this.navCtrl.setRoot(OrganizationDetailsPage);
         }
         

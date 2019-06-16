@@ -207,8 +207,9 @@ def registerOrganisation():
 @app.route('/createEvent', methods=['POST'])
 def createEvent():
     request_dict = request.get_json()
+    print(request_dict, sys.stderr)
     if request_dict == None:
-        print("[ ERROR ] Invalid data", sys.stderr)
+        print("[ ERROR ] Invalid data: dict is null", sys.stderr)
         return '{"status":"ERROR"}'
     
     #TO-DO return category
@@ -505,6 +506,56 @@ def getEvents():
         return res
     except:
         print("[ ERROR ]Error at getting events")
+        return '{"status":"ERROR"}'
+
+@app.route('/getEventsOrganization', methods=['POST'])
+def getEventsOrganization():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    organization = request_dict['email']
+    if organization == "":
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+    try:
+        db = get_db()
+        cur = db.cursor()
+        
+        query1 = 'select organisationId from Organisations where email=\'' + organization + '\''
+        
+        cur.execute(query1)
+        
+        org = cur.fetchone()
+        
+        if org[0] == None:
+            return '{"status":"ERROR"}'
+        
+        
+        events = []
+        for row in db.execute('select name, description, date, location from Events where organisationId = ?', (org[0],)):
+            cur.execute('select name from Organisations where organisationId = ?', (org[0],))
+            curRow = cur.fetchone()
+            evt = {
+                "name" : row[0],
+                "description" : row[1],
+                "date" : row[2],
+                "location": row[3],
+                "organisation": curRow[0],
+                "organisationEmail": organization
+            }
+            events.append(evt)
+        
+        temp = {
+                "events": events,
+                "status": "OK"
+        }
+        res = jsonify(temp)
+        print(res)
+        return res
+    except KeyError:
+        print("[ ERROR ] Error at getting events")
         return '{"status":"ERROR"}'
 
 
