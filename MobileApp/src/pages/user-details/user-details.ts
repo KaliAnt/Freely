@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FreelyUser } from '../../models/freely-user'
 import { FileChooser } from '@ionic-native/file-chooser';
-import { Base64 } from '@ionic-native/base64/ngx';
+import { Base64 } from '@ionic-native/base64';
 
 
 @Component({
