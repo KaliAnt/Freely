@@ -61,7 +61,7 @@ export class EventsPage {
     modal.present();
   }
 
-  goToEventDetails(event: any){
+  goToEventDetails(event: FreelyEvent){
     this.navCtrl.setRoot(EventManagementPage, {event: event});
   }
 

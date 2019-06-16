@@ -24,13 +24,14 @@
       <ion-item text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList" tappable>
           <div>
             <p class="activity_summary" *ngIf="sortTitle == subs">
-             <b>Nume: </b> {{item.name}} {{item.surname}}
+             <b>Name: </b> {{item.firstName}} {{item.lastName}}
             </p>
             <p>
               <b>Rating: </b> {{item.rating}}
             </p>
           </div>
-          <button *ngIf="item.status=='applied'" item-right color="primary" ion-button (click)="acceptUser(item)">{{'Accept'}}</button>
+          <button *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="acceptUser(item)">{{'Accept'}}</button>
+          <button *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="rejectUser(item)">{{'Reject'}}</button>
         </ion-item>
   </ion-list>
 

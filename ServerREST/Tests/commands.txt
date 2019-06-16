@@ -24,10 +24,10 @@ curl --request GET http://0.0.0.0:5000/searchEvent --header "Content-Type:applic
 curl --request POST http://0.0.0.0:5000/createApplication --header "Content-Type:application/json" --data '{"email":"calina.antal", "event":"test", "type":"interested"}'
 
 //accept/deny candidate
-curl --request POST http://0.0.0.0:5000/modifyStatusForApplication --header "Content-Type:application/json" --data '{"email":"calina.antal", "event":"test", "type":"accepted"}'
+curl --request POST http://0.0.0.0:5000/modifyStatusForApplication --header "Content-Type:application/json" --data '{"email":"calina.antal", "event":"test", "status":"accepted"}'
 
-//get users for event
-curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:application/json" --data '{"name":"test"}'
+//get users for event'
+curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:application/json" --data '{"name":"Dream Art Festival 2019", "status":"Interested"}'
 
 //get events
 curl --request GET http://0.0.0.0:5000/getEvents --header "Content-Type:application/json"

@@ -427,50 +427,58 @@ def modifyStatusForApplication():
     if request_dict == None:
         print("[ ERROR ] Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
-    
+
     try:
-        values = [request_dict['email'],
-        request_dict['event'],
-        request_dict['status']]
+        email = request_dict['email']
+        eventname = request_dict['event']
+        statusType = request_dict['status']
 
-        if values[2] == "accepted":
-            statusId = 3
-        else:
-            statusId = -1
+        if email == "" or eventname == "" or statusType == "":
+            print("[ ERROR ] Invalid email or eventname or status", sys.stderr)
+            return '{"status":"ERROR"}'
 
-        for element in values:
-            if element == "":
-                print("[ ERROR ] Invalid data", sys.stderr)
-                return '{"status":"ERROR"}'
+        db = get_db()
+        cur = db.cursor()
+
+        cur.execute('select statusId from status where name=?', (statusType, ))
+        statusId = cur.fetchone()
+
+        if statusId == None:
+            print("[ ERROR ] Invalid status type", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        query = 'select userId from Users where email=\'' + email + '\''
+        cur.execute(query)
+        userId = cur.fetchone()
+
+        if userId == None:
+            print("[ ERROR ] Invalid user email", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        query4 = 'select eventId from Events where name=\'' + eventname + '\''
+        cur.execute(query4)
+        eventId = cur.fetchone()
+
+        if eventId == None:
+            print("[ ERROR ] Invalid user email", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        cur.execute('select applicationId from applications where userId=? and eventId=?', (userId[0], eventId[0],))
+        applicationId = cur.fetchone()
+        if applicationId == None:
+            print("[ ERROR ] No such application exists", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        cur.execute('select statusId from applications where applicationId=?', (applicationId[0],))
+        oldStatusId = cur.fetchone()
+
+        if oldStatusId[0] == 2:
+            db.execute('update applications set statusId=? where applicationId=?', (statusId[0], applicationId[0],))
+            db.commit()
+        db.close()
+        return '{"status":"OK"}' 
 
     except KeyError:
-        print("[ ERROR ] Invalid json", sys.stderr)
-        return '{"status":"ERROR"}'
-
-    try:
-        db = get_db()
-        query = 'select userId from Users where email=\'' + values[0] + '\''
-        for row in db.execute(query):
-            userId=row[0]
-            break
-
-        query4 = 'select eventId from Events where name=\'' + values[1] + '\''
-        for row in db.execute(query4):
-            eventId = row[0]
-            break
-
-        if statusId == 3:
-            db.execute('update applications set statusId=? where userid=? and eventid=?', (statusId, userId, eventId))
-            db.commit()
-            return '{"status":"OK"}'
-        else:
-            print("hello")
-            query3 = 'delete from applications where userId=\'' + userId + '\''
-            db.execute(query3)
-            db.commit()
-            return '{"status":"OK"}' 
-
-    except:
         print("[ ERROR ] Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
 
@@ -559,16 +567,8 @@ def getEventsOrganization():
         return '{"status":"ERROR"}'
 
 
-
-@app.route('/getEventsForUser', methods=['GET'])
-def getInterestedEventsUser():
-    pass
-
-@app.route('/getPendingEventsUser', methods=['GET'])
-def getPendingEventsUser():
-    pass
-
 #for organisation
+#gets name of event and type of status as params
 @app.route('/getUsersForEvent', methods=['POST'])
 def getUsersForEvent():
     request_dict = request.get_json()
@@ -576,77 +576,104 @@ def getUsersForEvent():
         print("[ ERROR ] Invalid json", sys.stderr)
         return '{"status":"ERROR"}'
     
-    #TO-DO return category
     try:
-        values = request_dict['name']
+        eventName = request_dict['name']
+        statusType = request_dict['status']
 
         #TO-DO description can be null
-        if values == "":
+        if eventName == "" or statusType == "":
             print("[ ERROR ] Invalid data", sys.stderr)
             return '{"status":"ERROR"}'
-
-    except KeyError:
-        print("Invalid data", sys.stderr)
-        return '{"status":"ERROR"}'
-
-    try:
+        
         db = get_db()
+        cur = db.cursor()
 
-        query = 'select eventid from Events where name=\'' + values + '\''
-        for row in db.execute(query):
-            eventId = row[0]
-            break
+        query = 'select eventid from Events where name=\'' + eventName + '\''
+        cur.execute(query)
+        eventId = cur.fetchone()
+        
+        if eventId == None:
+            print("No such event exists", sys.stderr)
+            return '{"status":"ERROR"}'
 
         
+        if statusType == "*":
+            userIds = []
+            for row2 in db.execute('select userId from Applications where eventId=?',(eventId[0],)):
+                userIds.append(row2[0])
+            
+            users=[]
+            for userId in userIds:
+                #query2 = 'select firstname, lastname, email, birthdate, rating, description from Users where userid=3' 
+                #query3 = 'select statusId from Applications where userId=?' + userId
+                cur.execute('select statusId from Applications where userId=?', (userId,))
+                tempStatus = cur.fetchone()
+
+                cur.execute('select name from Status where statusId=?', (tempStatus[0],))
+                tempStatusType = cur.fetchone()
+
+                cur.execute('select firstname, lastname, email, birthdate, rating, description from Users where userid=%s' %userId)
+                row3 = cur.fetchone()
+                tmp = {
+                    "firstName" : row3[0],
+                    "lastName" : row3[1],
+                    "email" : row3[2],
+                    "birthdate" : row3[3],
+                    "rating" : row3[4],
+                    "description" : row3[5],
+                    "appStatus" : tempStatusType[0]
+                }
+                users.append(tmp)
+            result = {
+                "users" : users,
+                "status" : "OK"
+            }
+            res = jsonify(result)
+            print(res, sys.stderr)
+            return res
+
+        cur.execute('select statusId from Status where name=?', (statusType,))
+        statusId = cur.fetchone()
+       
+        if statusId == None:
+            print("No such status exists", sys.stderr)
+            return '{"status":"ERROR"}'
 
         userIds = []
         
         #query1 = 'select userId from applications where eventId=\'' + eventId + '\''
         #print(query1)
         
-
-        for row2 in db.execute('select userId from Applications where eventId=%s' %eventId):
+        
+        for row2 in db.execute('select userId from Applications where eventId=? and statusId=?',(eventId[0], statusId[0],)):
             userIds.append(row2[0])
             
         users=[]
         for userId in userIds:
             #query2 = 'select firstname, lastname, email, birthdate, rating, description from Users where userid=3' 
             #query3 = 'select statusId from Applications where userId=?' + userId
-            for row4 in db.execute('select statusId from Applications where userId=%s' %userId):
-                statusId = row4[0]
-                if statusId == 1:
-                    continue
-                else:
-                    if statusId == 2:
-                        status = "pending"
-                    if statusId == 3:
-                        status = "accepted"
-                    for row3 in db.execute('select firstname, lastname, email, birthdate, rating, description from Users where userid=%s' %userId):
-                    
-                        tmp = {
-                            "firstName" : row3[0],
-                            "lastName" : row3[1],
-                            "email" : row3[2],
-                            "birthdate" : row3[3],
-                            "rating" : row3[4],
-                            "description" : row3[5],
-                            "status" : status
-                        }
-                        users.append(tmp)
+            for row3 in db.execute('select firstname, lastname, email, birthdate, rating, description from Users where userid=%s' %userId):
+                tmp = {
+                    "firstName" : row3[0],
+                    "lastName" : row3[1],
+                    "email" : row3[2],
+                    "birthdate" : row3[3],
+                    "rating" : row3[4],
+                    "description" : row3[5],
+                    "status" : statusType
+                }
+                print(tmp, sys.stderr)
+                users.append(tmp)
         result = {
             "users" : users,
             "status" : "OK"
         }
         res = jsonify(result)
-        print(res)
+        print(res, sys.stderr)
         return res
-    except:
+    except KeyError:
         print("Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
-    
-@app.route('/getAcceptedUsersForEvent', methods=['GET'])
-def getAcceptedUsersForEvent():
-    pass
 
 @app.route('/uploadFile', methods=['POST'])
 def uploadFile():

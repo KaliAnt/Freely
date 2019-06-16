@@ -12,7 +12,8 @@ import { EventsPage } from '../pages/events/events';
 import { CreateEventPage } from '../pages/create-event/create-event';
 import { EventManagementPage } from '../pages/event-management/event-management';
 import { EventsDashBoardPage } from '../pages/events-dash-board/events-dash-board';
-import { EventDetailsViewPage} from '../pages/event-details-view/event-details-view';
+import { EventDetailsViewPage } from '../pages/event-details-view/event-details-view';
+import { UserPublicProfilePage } from '../pages/user-public-profile/user-public-profile'
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginProvider } from '../providers/login/login';
@@ -23,6 +24,7 @@ import { RegisterCompanyProvider } from '../providers/register-company/register-
 import { EventsProvider } from '../providers/events/events';
 import { EventOrganizationDescriptionPage } from '../pages/event-organization-description/event-organization-description';
 import { EventParticipantsPage } from '../pages/event-participants/event-participants';
+import { UserApplicationProvider } from '../providers/user-application/user-application';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
     EventsDashBoardPage,
     EventOrganizationDescriptionPage,
     EventParticipantsPage,
-    EventDetailsViewPage
+    EventDetailsViewPage,
+    UserPublicProfilePage
   ],
   imports: [
     BrowserModule,
@@ -58,7 +61,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
     EventsDashBoardPage,
     EventOrganizationDescriptionPage,
     EventParticipantsPage,
-    EventDetailsViewPage
+    EventDetailsViewPage,
+    UserPublicProfilePage
   ],
   providers: [
     StatusBar,
@@ -68,7 +72,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
     RequestProvider,
     EventsProvider,
     RegisterProvider,
-    RegisterCompanyProvider
+    RegisterCompanyProvider,
+    UserApplicationProvider
   ]
 })
 export class AppModule {}
