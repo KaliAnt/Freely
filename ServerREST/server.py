@@ -233,6 +233,8 @@ def createEvent():
 
     try:
         db = get_db()
+        cur = db.cursor()
+
         query = 'select organisationId from Organisations where name=\'' + values[3] + '\''
         query2 = 'select categoryId from Categories where name=\'' + values[4] + '\''
         query3 = 'select eventId from Events where name=\'' + values[0] + '\''
@@ -251,9 +253,12 @@ def createEvent():
         db.commit()
         #TO-Do fix this mess. only one value expected!!
         
-        for row2 in db.execute(query2):
-            categoryId = row2[0]
-            break
+        cur.execute('select categoryId from categories where name=?', (values[4],))
+        categoryId = cur.fetchone()
+
+        if categoryId == None:
+            print("No such category", sys.stderr)
+            return '{"status":"ERROR"}'
 
         for row2 in db.execute(query3):
             eventId = row2[0]
@@ -268,14 +273,14 @@ def createEvent():
             eventId = row3[0]
             break
 
-        eventCategories = [eventId, categoryId]
+        eventCategories = [eventId, categoryId[0]]
         
         db.execute('insert into eventCategories (eventid, categoryid) values (?,?)', eventCategories)
 
         db.commit()
 
         return '{"status":"OK"}'
-    except:
+    except KeyError:
         print("[ ERROR ] Can't insert data in db", sys.stderr)
         return '{"status":"ERROR"}'
 
@@ -687,11 +692,12 @@ def getUsersForEvent():
             for userId in userIds:
                 #query2 = 'select firstname, lastname, email, birthdate, rating, description from Users where userid=3' 
                 #query3 = 'select statusId from Applications where userId=?' + userId
-                cur.execute('select statusId from Applications where userId=?', (userId,))
-                tempStatus = cur.fetchone()
-
-                cur.execute('select name from Status where statusId=?', (tempStatus[0],))
+                cur.execute('select statusId from Applications where userId=? and eventId=?', (userId,eventId[0],))
+                tempStatusId = cur.fetchone()
+                
+                cur.execute('select name from Status where statusId=?', (tempStatusId[0],))
                 tempStatusType = cur.fetchone()
+                
 
                 cur.execute('select firstname, lastname, email, birthdate, rating, description from Users where userid=%s' %userId)
                 row3 = cur.fetchone()
