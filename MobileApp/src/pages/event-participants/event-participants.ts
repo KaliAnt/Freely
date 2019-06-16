@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserApplicationProvider } from '../../providers/user-application/user-application'
 import { FreelyUserApplication } from '../../models/freely-user-application'
+import { UserPublicProfilePage } from '../user-public-profile/user-public-profile'
 
 /**
  * Generated class for the EventParticipantsPage page.
@@ -65,7 +66,9 @@ export class EventParticipantsPage {
   }
 
   viewUser(item){
+    this.navCtrl.push(UserPublicProfilePage,{item:item});
   }
+  
   rejectUser(item){
     this.userApplicationProvider.modifyStatusForApplication(this.eventName, item.email, "Rejected").then(result => {
       if(result.status == "OK") {

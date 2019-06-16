@@ -11,6 +11,7 @@ import { OrganizationDetailsPage } from '../pages/organization-details/organizat
 import { EventsDashBoardPage } from '../pages/events-dash-board/events-dash-board';
 import { EventManagementPage } from '../pages/event-management/event-management';
 import { AlertController } from 'ionic-angular';
+import { UserApplicationViewPage } from '../pages/user-application-view/user-application-view';
 
 @Component({
   templateUrl: 'app.html'
@@ -30,7 +31,8 @@ export class MyApp {
       { title: 'Profile', component: UserDetailsPage },
       { title: 'Organization', component: OrganizationDetailsPage },
       { title: 'Events', component: EventsPage },
-      { title: 'Dashboard', component: EventsDashBoardPage }
+      { title: 'Dashboard', component: EventsDashBoardPage },
+      { title: 'Applications', component: UserApplicationViewPage }
     ];
 
   }
@@ -65,6 +67,12 @@ export class MyApp {
 
     if(p.title == 'Events'){
       if(sessionStorage.getItem("type") == "volunteer"){
+        return false;
+      }
+    }
+
+    if(p.title == 'Applications'){
+      if(sessionStorage.getItem("type") != "volunteer"){
         return false;
       }
     }

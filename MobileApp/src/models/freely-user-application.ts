@@ -1,6 +1,6 @@
 export class FreelyUserApplication {
     firstName:string;
-    lastname:string;
+    lastName:string;
     email:string;
     birthdate:string;
     rating:string;

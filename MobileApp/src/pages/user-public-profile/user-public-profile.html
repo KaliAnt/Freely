@@ -5,7 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>UserPublicProfile</ion-title>
   </ion-navbar>
 </ion-header>
@@ -13,3 +13,31 @@
 <ion-content padding>
 
 </ion-content>
+
+<ion-content class="content">
+  <div class ="logo-container">
+      <img class ="circle-pic" src="assets/imgs/profile.jpg"/>
+
+      <p class="logo-name">
+          {{user.firstName}} {{user.lastName}}
+      </p>
+      <p class="logo-rating">
+          {{user.rating}} <ion-icon name="star"></ion-icon>
+      </p>
+
+  </div>
+
+  <p class="logo-desc">
+      {{user.description}}   
+  </p>
+  <hr class="logo-separator">
+  <h3 style="color: #353457; text-align: center; margin:10px">Contact info</h3>
+  <div class="contactInfo">
+    <ion-item large no-lines>
+        <p class="info"> <ion-icon large name="mail" color="primary" style="padding-right: 10px;"></ion-icon> {{user.email}}</p>
+    </ion-item>
+  </div>
+
+
+</ion-content>
+

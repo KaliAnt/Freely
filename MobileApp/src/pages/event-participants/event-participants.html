@@ -21,7 +21,7 @@
 <ion-content padding>
 
   <ion-list>
-      <ion-item text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList" tappable>
+      <ion-item (click)="viewUser(item)" text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList" tappable>
           <div>
             <p class="activity_summary" *ngIf="sortTitle == subs">
              <b>Name: </b> {{item.firstName}} {{item.lastName}}
@@ -30,8 +30,8 @@
               <b>Rating: </b> {{item.rating}}
             </p>
           </div>
-          <button *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="acceptUser(item)">{{'Accept'}}</button>
-          <button *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="rejectUser(item)">{{'Reject'}}</button>
+          <button style="z-index:2" *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="acceptUser(item)">{{'Accept'}}</button>
+          <button style="z-index:2" *ngIf="item.appStatus=='Pending'" item-right color="primary" ion-button (click)="rejectUser(item)">{{'Reject'}}</button>
         </ion-item>
   </ion-list>
 

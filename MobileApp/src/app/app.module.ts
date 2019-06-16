@@ -13,7 +13,8 @@ import { CreateEventPage } from '../pages/create-event/create-event';
 import { EventManagementPage } from '../pages/event-management/event-management';
 import { EventsDashBoardPage } from '../pages/events-dash-board/events-dash-board';
 import { EventDetailsViewPage } from '../pages/event-details-view/event-details-view';
-import { UserPublicProfilePage } from '../pages/user-public-profile/user-public-profile'
+import { UserPublicProfilePage } from '../pages/user-public-profile/user-public-profile';
+import { UserApplicationViewPage } from '../pages/user-application-view/user-application-view';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginProvider } from '../providers/login/login';
@@ -40,7 +41,8 @@ import { UserApplicationProvider } from '../providers/user-application/user-appl
     EventOrganizationDescriptionPage,
     EventParticipantsPage,
     EventDetailsViewPage,
-    UserPublicProfilePage
+    UserPublicProfilePage,
+    UserApplicationViewPage
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { UserApplicationProvider } from '../providers/user-application/user-appl
     EventOrganizationDescriptionPage,
     EventParticipantsPage,
     EventDetailsViewPage,
-    UserPublicProfilePage
+    UserPublicProfilePage,
+    UserApplicationViewPage
   ],
   providers: [
     StatusBar,

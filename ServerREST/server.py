@@ -566,6 +566,87 @@ def getEventsOrganization():
         print("[ ERROR ] Error at getting events")
         return '{"status":"ERROR"}'
 
+#for users
+#gets email of a user as a parameter
+@app.route('/getUserApplications', methods=['POST'])
+def getUserApplications():
+    request_dict = request.get_json()
+    if request_dict == None:
+        print("[ ERROR ] Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+    try:
+        email = request_dict["email"]
+
+        if email == "":
+            print("[ ERROR ] Invalid email", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        db = get_db()
+        cur = db.cursor()
+
+        cur.execute('select userId from Users where email=?',(email,))
+        userId = cur.fetchone()
+
+        if userId == None:
+            print("[ ERROR ] No such user exists", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        applications = []
+        for app in db.execute('select eventId, statusId from Applications where userId=?', (userId[0],)):
+            eventId = app[0]
+            statusId = app[1]
+
+            cur.execute('select name, description from status where statusId=?', (statusId,))
+            statusType = cur.fetchone()
+
+            cur.execute('select name, description, date, location, organisationId from Events where eventId=?', (eventId,))
+            eventData = cur.fetchone()
+
+            eventName = eventData[0]
+            eventDescription = eventData[1]
+            eventDate = eventData[2]
+            eventLocation = eventData[3]
+            organisationId = eventData[4]
+
+            cur.execute('select name, email, description, rating from Organisations where organisationId=?', (organisationId,))
+            orgData = cur.fetchone()
+
+            organizationData = {
+                "name" : orgData[0],
+                "email" : orgData[1],
+                "description" : orgData[2],
+                "rating" : orgData[3]
+            }
+
+            eventData = {
+                "name" : eventName,
+                "date" : eventDate,
+                "description" : eventDescription,
+                "location" : eventLocation,
+                "organization" : organizationData
+            }
+
+            appElement = {
+                "event" : eventData,
+                "appStatus" : statusType[0]
+            }
+
+            applications.append(appElement)
+            print(appElement)
+        
+        result = {
+            "applications" : applications,
+            "status" : "OK"
+        }
+        res = jsonify(result)
+        print(res, sys.stderr)
+        db.close()
+        return res
+
+
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
 
 #for organisation
 #gets name of event and type of status as params
@@ -901,6 +982,7 @@ def uploadFile():
     except KeyError:
         print("Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
+
 
     
 

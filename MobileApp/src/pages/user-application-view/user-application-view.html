@@ -1,0 +1,29 @@
+<!--
+  Generated template for the UserApplicationViewPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Applications</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item (click)="viewEvent(item)" text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList" tappable>
+        <div>
+          <p class="activity_summary" *ngIf="sortTitle == subs">
+           <b>Event: </b> {{item.event.name}}
+          </p>
+          <p>
+            <b>Date: </b> {{item.event.date}}
+          </p>
+        </div>
+      </ion-item>
+</ion-list>
+</ion-content>

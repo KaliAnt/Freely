@@ -22,6 +22,14 @@ export class UserApplicationProvider {
     return this.requestProvider.buildPost("getUsersForEvent", payload, false).map(data => data.json()).toPromise();
   }
 
+  getUserApplications(email: string) {
+    var payload = {
+      email: email
+    }
+
+    return this.requestProvider.buildPost("getUserApplications", payload, false).map(data => data.json()).toPromise();
+  }
+
   modifyStatusForApplication(event: string, email: string, status: string) {
     var payload = {
       event: event,

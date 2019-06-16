@@ -13,7 +13,6 @@ curl --request POST http://0.0.0.0:5000/registerOrganisation --header "Content-T
 //create event
 curl --request POST http://0.0.0.0:5000/createEvent --header "Content-Type:application/json" --data '{"name":"test", "date":"24.01.2018", "organisation":"test", "description":"test event!", "category":"IT", "location":"Timisoara"}'
 
-
 //modify event
 curl --request POST http://0.0.0.0:5000/modifyEvent --header "Content-Type:application/json" --data '{"name":"test", "date":"24.01.2018", "organisation":"test", "description":"test event modified!", "category":"IT", "location":"Timisoara"}'
 
@@ -26,8 +25,11 @@ curl --request POST http://0.0.0.0:5000/createApplication --header "Content-Type
 //accept/deny candidate
 curl --request POST http://0.0.0.0:5000/modifyStatusForApplication --header "Content-Type:application/json" --data '{"email":"calina.antal", "event":"test", "status":"accepted"}'
 
-//get users for event'
+//get users for event
 curl --request POST http://0.0.0.0:5000/getUsersForEvent --header "Content-Type:application/json" --data '{"name":"Dream Art Festival 2019", "status":"Interested"}'
+
+//get applications for users
+curl --request POST http://0.0.0.0:5000/getUserApplications --header "Content-Type:application/json" --data '{"email":"calina.antal"}'
 
 //get events
 curl --request GET http://0.0.0.0:5000/getEvents --header "Content-Type:application/json"
@@ -53,6 +55,5 @@ curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:appli
 //download file - event cover
 curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"cover", "event":"test"}'
 
-//get user details
 
 //get organisation details
