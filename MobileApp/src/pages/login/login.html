@@ -15,6 +15,10 @@
           <ion-input placeholder="password" type="password" [(ngModel)]="account.password" name="password"></ion-input>
         </ion-item>
 
+        <ion-item>
+          <ion-input placeholder="ip" type="text" [(ngModel)]="account.ip" name="ip"></ion-input>
+        </ion-item>
+
         <div class="passItem" tappable (click)="togglePass()">
           <ion-row>
             <ion-icon color="primary" style="font-size:1.3em;" [name]="passIcon()"></ion-icon> 

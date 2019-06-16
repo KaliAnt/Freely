@@ -6,6 +6,7 @@ import { AlertController } from 'ionic-angular';
 import { UserDetailsPage } from '../../pages/user-details/user-details';
 import { OrganizationDetailsPage } from '../../pages/organization-details/organization-details';
 import { FreelyUser } from '../../models/freely-user'
+import { RequestProvider } from '../../providers/request/request';
 
 /**
  * Generated class for the LoginPage page.
@@ -22,12 +23,13 @@ export class LoginPage {
 
   private account: any = {
     email: "",
-    password: ""
+    password: "",
+    ip: "http://127.0.0.1:5000/"
   };
   private rememberPass: boolean = false;
   private isLoading: boolean = false;
 
-  constructor(private alertController: AlertController, private loginProvider: LoginProvider, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private requestProvider:RequestProvider, private alertController: AlertController, private loginProvider: LoginProvider, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
@@ -67,9 +69,12 @@ export class LoginPage {
   }
 
   doLogin(){
+    this.requestProvider.setIp(this.account.ip);
     this.loginProvider.login(this.account.email, this.account.password).then(result =>{
       console.log(result);
+
       if(result.status == "OK"){
+        
         sessionStorage.setItem("type", result.type);
         if(result.type == "volunteer"){
           sessionStorage.setItem("firstName", result.data.firstName);

@@ -19,7 +19,7 @@ export class RequestProvider {
     private errors: Observable<any>;
     private errorsSubject = new Subject<any>();
 
-    private restUrl: string = "http://127.0.0.1:5000/";
+    private restUrl: string = "http://0.0.0.0:5000/";
 
     private jwt_token: String;
 
@@ -29,8 +29,11 @@ export class RequestProvider {
         // private _broadcastService:BroadcastService,
     ) {
         this.errors = this.errorsSubject.asObservable();
-
         this.registerErrorHandler();
+    }
+
+    public setIp(ip:string) {
+        this.restUrl = ip;
     }
 
     public setToken(token: String): void {
