@@ -9,7 +9,7 @@
 
 <ion-content class="content">
   <div class ="logo-container">
-      <img class ="circle-pic" src="assets/imgs/profile.jpg"/>
+      <img (click) = "editImage()" class ="circle-pic" [src]="picturePath"/>
 
       <p class="logo-name">
           {{userData.firstName}} {{userData.lastName}}

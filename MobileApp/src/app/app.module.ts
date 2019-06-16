@@ -15,6 +15,8 @@ import { EventsDashBoardPage } from '../pages/events-dash-board/events-dash-boar
 import { EventDetailsViewPage } from '../pages/event-details-view/event-details-view';
 import { UserPublicProfilePage } from '../pages/user-public-profile/user-public-profile';
 import { UserApplicationViewPage } from '../pages/user-application-view/user-application-view';
+import { OrganizationProfileEditPage } from '../pages/organization-profile-edit/organization-profile-edit';
+import { UserProfileEditPage } from '../pages/user-profile-edit/user-profile-edit';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginProvider } from '../providers/login/login';
@@ -26,6 +28,7 @@ import { EventsProvider } from '../providers/events/events';
 import { EventOrganizationDescriptionPage } from '../pages/event-organization-description/event-organization-description';
 import { EventParticipantsPage } from '../pages/event-participants/event-participants';
 import { UserApplicationProvider } from '../providers/user-application/user-application';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +45,9 @@ import { UserApplicationProvider } from '../providers/user-application/user-appl
     EventParticipantsPage,
     EventDetailsViewPage,
     UserPublicProfilePage,
-    UserApplicationViewPage
+    UserApplicationViewPage,
+    OrganizationProfileEditPage,
+    UserProfileEditPage
   ],
   imports: [
     BrowserModule,
@@ -65,7 +70,9 @@ import { UserApplicationProvider } from '../providers/user-application/user-appl
     EventParticipantsPage,
     EventDetailsViewPage,
     UserPublicProfilePage,
-    UserApplicationViewPage
+    UserApplicationViewPage,
+    OrganizationProfileEditPage,
+    UserProfileEditPage
   ],
   providers: [
     StatusBar,
