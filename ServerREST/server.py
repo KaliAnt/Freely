@@ -6,10 +6,13 @@ import time
 from flask import jsonify
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
+from flask_cors import CORS, cross_origin
 
 #create app instance
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(__name__)
+
 
 
 app.config.update(dict(
