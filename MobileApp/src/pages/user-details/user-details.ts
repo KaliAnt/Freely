@@ -45,6 +45,7 @@ export class UserDetailsPage {
   editImage() {
     this.fileChooser.open()
     .then(uri => {
+      alert(uri);
       this.base64.encodeFile(uri).then((base64File: string) => {
         this.fileProvider.sendCVFile(base64File, this.userData.email).then(response =>{
           alert(response);
