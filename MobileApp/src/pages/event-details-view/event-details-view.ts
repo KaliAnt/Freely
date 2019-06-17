@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FreelyEvent } from '../../models/freely-event';
+import { UserApplicationProvider } from '../../providers/user-application/user-application';
 
 /**
  * Generated class for the EventDetailsViewPage page.
@@ -17,7 +18,7 @@ import { FreelyEvent } from '../../models/freely-event';
 export class EventDetailsViewPage {
   eventObj:FreelyEvent;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private userApplicationProvider:UserApplicationProvider, public navCtrl: NavController, public navParams: NavParams) {
     this.eventObj = navParams.get('item');
   }
 
@@ -30,7 +31,14 @@ export class EventDetailsViewPage {
   }
 
   onClickEvent(actionType: string) {
-
+    var userData = JSON.parse(localStorage.getItem("userData"));
+    this.userApplicationProvider.createApplication(this.eventObj.name, userData.email,actionType).then(data =>{
+      if(data.status == "OK"){
+        console.log("APPLIED!")
+      }else{
+        console.log("ERROR!")
+      }
+    });
   }
 
 }

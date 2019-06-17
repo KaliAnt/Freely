@@ -768,6 +768,7 @@ def getUsersForEvent():
 @app.route('/uploadFile', methods=['POST'])
 def uploadFile():
     request_dict = request.get_json()
+    print(request_dict, sys.stderr)
     if request_dict == None:
         print("[ ERROR ] Invalid json", sys.stderr)
         return '{"status":"ERROR"}'

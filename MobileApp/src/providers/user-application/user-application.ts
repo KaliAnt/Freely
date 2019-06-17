@@ -39,4 +39,14 @@ export class UserApplicationProvider {
     return this.requestProvider.buildPost("modifyStatusForApplication", payload, false).map(data => data.json()).toPromise();
   }
 
+  createApplication(event:string, email:string, type:string) {
+    var payload = {
+      event: event,
+      email: email,
+      type: type
+    }
+
+    return this.requestProvider.buildPost("createApplication", payload, false).map(data => data.json()).toPromise();
+  }
+
 }
