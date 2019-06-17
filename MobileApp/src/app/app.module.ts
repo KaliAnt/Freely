@@ -30,6 +30,7 @@ import { EventOrganizationDescriptionPage } from '../pages/event-organization-de
 import { EventParticipantsPage } from '../pages/event-participants/event-participants';
 import { UserApplicationProvider } from '../providers/user-application/user-application';
 import { FileChooser } from '@ionic-native/file-chooser';
+import { FileProvider } from '../providers/file/file';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { FileChooser } from '@ionic-native/file-chooser';
     RegisterCompanyProvider,
     UserApplicationProvider,
     Base64,
-    FileChooser
+    FileChooser,
+    FileProvider
   ]
 })
 export class AppModule {}

@@ -78,6 +78,9 @@ export class RequestProvider {
         if (this.jwt_token) {
             headers.append('Authorization', 'Bearer ' + this.jwt_token);
         }
+        headers.append("Access-Control-Allow-Origin", "*");
+        headers.append("Access-Control-Allow-Methods", "GET, POST");
+        headers.append("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
         return headers;
     }
 

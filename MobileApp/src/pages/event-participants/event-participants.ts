@@ -83,7 +83,7 @@ export class EventParticipantsPage {
 
   getItemColor(item){
     if(item.appStatus == "Pending"){
-      return "white";
+      return "third";
     }
     if(item.appStatus == "Rejected"){
       return "third";

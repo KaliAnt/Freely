@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FreelyUser } from '../../models/freely-user'
 import { FileChooser } from '@ionic-native/file-chooser';
 import { Base64 } from '@ionic-native/base64';
+import { FileProvider } from '../../providers/file/file';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class UserDetailsPage {
     birthdate: " "
   };
 
-  constructor(private base64: Base64, private fileChooser: FileChooser, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private fileProvider: FileProvider, private base64: Base64, private fileChooser: FileChooser, public navCtrl: NavController, public navParams: NavParams) {
 
   }
 
@@ -45,11 +46,10 @@ export class UserDetailsPage {
     this.fileChooser.open()
     .then(uri => {
       this.base64.encodeFile(uri).then((base64File: string) => {
-        console.log(base64File);
-        this.picturePath = uri;
-        alert(base64File);
+        this.fileProvider.sendCVFile(base64File, this.userData.email).then(response =>{
+          alert(response);
+        });
       }, (err) => {
-        console.log("## LOOK HERE");
         console.log(err);
       });
     });
