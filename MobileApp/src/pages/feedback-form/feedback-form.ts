@@ -43,7 +43,7 @@ export class FeedbackFormPage {
       if(result.status == "OK") {
         try {
             alert("Feedback submitted!")
-
+            this.navCtrl.pop();
           } catch (error) {
             console.log("invalid applications list");
           }

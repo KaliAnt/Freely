@@ -7,6 +7,7 @@ import { ViewChild } from '@angular/core';
 import { FreelyEvent } from '../../models/freely-event'
 import { EventListener } from '@angular/core/src/debug/debug_node';
 import { templateJitUrl, removeSummaryDuplicates } from '@angular/compiler';
+import { Events } from 'ionic-angular';
 /**
  * Generated class for the EventsDashBoardPage page.
  *
@@ -48,7 +49,7 @@ export class EventsDashBoardPage {
     organizerEmail: ""
   };
 
-  constructor(public eventsProvider: EventsProvider, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private ev: Events, public eventsProvider: EventsProvider, public navCtrl: NavController, public navParams: NavParams) {
    
   }
 
@@ -87,6 +88,16 @@ export class EventsDashBoardPage {
 
   showEvent(item: any) {
     this.navCtrl.push(EventDetailsViewPage,{item:item});
+  }
+
+  onInput(ev) {
+    console.log("USER INPUT:")
+    console.log(ev)
+  }
+
+  onCancel(ev) {
+    console.log("USER CANCEL:")
+    console.log(ev)
   }
 
   ionViewDidLoad() {
