@@ -34,7 +34,7 @@ export class EventDetailsViewPage {
     var userData = JSON.parse(localStorage.getItem("userData"));
     this.userApplicationProvider.createApplication(this.eventObj.name, userData.email,actionType).then(data =>{
       if(data.status == "OK"){
-        console.log("APPLIED!")
+        alert("Application created!");
       }else{
         console.log("ERROR!")
       }

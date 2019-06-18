@@ -17,6 +17,8 @@ import { UserPublicProfilePage } from '../pages/user-public-profile/user-public-
 import { UserApplicationViewPage } from '../pages/user-application-view/user-application-view';
 import { OrganizationProfileEditPage } from '../pages/organization-profile-edit/organization-profile-edit';
 import { UserProfileEditPage } from '../pages/user-profile-edit/user-profile-edit';
+import { FeedbackFormPage } from '../pages/feedback-form/feedback-form';
+
 import { Base64 } from '@ionic-native/base64';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -31,6 +33,8 @@ import { EventParticipantsPage } from '../pages/event-participants/event-partici
 import { UserApplicationProvider } from '../providers/user-application/user-application';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FileProvider } from '../providers/file/file';
+import { FeedbackProvider } from '../providers/feedback/feedback';
+import { StarRatingModule } from 'ionic3-star-rating';
 
 
 @NgModule({
@@ -50,11 +54,13 @@ import { FileProvider } from '../providers/file/file';
     UserPublicProfilePage,
     UserApplicationViewPage,
     OrganizationProfileEditPage,
-    UserProfileEditPage
+    UserProfileEditPage,
+    FeedbackFormPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    StarRatingModule,
     IonicModule.forRoot(MyApp, { scrollAssist: false, autoFocusAssist: false }),
   ],
   bootstrap: [IonicApp],
@@ -75,7 +81,8 @@ import { FileProvider } from '../providers/file/file';
     UserPublicProfilePage,
     UserApplicationViewPage,
     OrganizationProfileEditPage,
-    UserProfileEditPage
+    UserProfileEditPage,
+    FeedbackFormPage
   ],
   providers: [
     StatusBar,
@@ -89,7 +96,8 @@ import { FileProvider } from '../providers/file/file';
     UserApplicationProvider,
     Base64,
     FileChooser,
-    FileProvider
+    FileProvider,
+    FeedbackProvider
   ]
 })
 export class AppModule {}

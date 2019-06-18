@@ -55,5 +55,12 @@ curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:appli
 //download file - event cover
 curl --request GET http://0.0.0.0:5000/downloadFile --header "Content-Type:application/json" --data '{"email":"test", "type":"cover", "event":"test"}'
 
+//canGiveFeedback
+curl --request POST http://0.0.0.0:5000/canGiveFeedback --header "Content-Type:application/json" --data '{"event":"test"}'
+
+//postFeedback
+curl --request POST http://0.0.0.0:5000/postFeedback --header "Content-Type:application/json" --data '{"email":"test", "for":"volunteer", "rating":"3", "description":"test"}'
 
 //get organisation details
+
+

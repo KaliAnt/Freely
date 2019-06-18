@@ -6,6 +6,8 @@ import { FreelyEventData } from '../../models/freely-event-data';
 import { FreelyEventApplicationView } from '../../models/freely-event-application-view';
 import { EventDetailsViewPage } from '../event-details-view/event-details-view';
 import { FreelyEvent } from '../../models/freely-event';
+import { FeedbackProvider } from '../../providers/feedback/feedback'
+import { FeedbackFormPage } from '../feedback-form/feedback-form';
 
 /**
  * Generated class for the UserApplicationViewPage page.
@@ -21,28 +23,33 @@ import { FreelyEvent } from '../../models/freely-event';
 })
 export class UserApplicationViewPage {
   private applicationList: Array<FreelyEventApplicationView>;
+  private canGiveFeedbacks : Array<any>;
 
 
-  constructor(private userApplicationProvider: UserApplicationProvider, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private feedbackProvider:FeedbackProvider, private userApplicationProvider: UserApplicationProvider, public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    this.getUsersForEvent();
+    this.getUserApplications();
     console.log('ionViewDidLoad UserApplicationViewPage');
   }
 
-  getUsersForEvent() {
+  getUserApplications() {
     var user = JSON.parse(localStorage.getItem("userData"));
     console.log("USER EMAIL:");
     console.log(user.email);
     this.userApplicationProvider.getUserApplications(user.email).then(result => {
       if(result.status == "OK") {
         try {
-            console.log("APPLICATIONS req:");
-            console.log(result.applications);
+            
             this.applicationList = result.applications;
-            console.log("APPLICATIONS:");
-            console.log(this.applicationList);
+            for (let entry of this.applicationList) 
+              this.feedbackProvider.canGiveFeedback(entry.event.name).then(result => {
+                 if(result.status == "OK")
+                  console.log("OK");
+                 
+              });
+
           } catch (error) {
             console.log("invalid applications list");
           }
@@ -63,6 +70,20 @@ export class UserApplicationViewPage {
       return "secondary";
     }
   }
+
+  getFeedbackButton(item) {
+    // return false;
+    
+    return true;
+  }
+
+  giveFeedback(item) {
+    console.log("THIS IS BEFORE PUSH:")
+    console.log(item.event)
+    this.navCtrl.push(FeedbackFormPage,{event:item.event});
+  }
+
+
 
   viewEvent(item) {
     var event: FreelyEvent = {

@@ -15,8 +15,8 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item (click)="viewEvent(item)" text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList" tappable>
-        <div>
+    <ion-item text-wrap no-lines [color]="getItemColor(item)" *ngFor="let item of applicationList">
+        <div (click)="viewEvent(item)">
           <p class="activity_summary" *ngIf="sortTitle == subs">
            <b>Event: </b> {{item.event.name}}
           </p>
@@ -24,6 +24,7 @@
             <b>Date: </b> {{item.event.date}}
           </p>
         </div>
+        <button *ngIf="getFeedbackButton(item)" item-right color="light" ion-button (click)="giveFeedback(item)">{{'Feedback'}}</button>
       </ion-item>
 </ion-list>
 </ion-content>

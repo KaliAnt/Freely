@@ -2,6 +2,7 @@ import os
 import sys
 import sqlite3
 import time
+import datetime
 
 from flask import jsonify
 from flask import Flask, request, session, g, redirect, url_for, abort, \
@@ -153,7 +154,8 @@ def registerUser():
         request_dict['lastname'],
         request_dict['birthdate'],
         request_dict['description'],
-        "5.0"]
+        "5",
+        "10"]
 
         #TO-DO description can be null
         for element in values:
@@ -166,7 +168,7 @@ def registerUser():
         return '{"status":"ERROR"}'
     try:
         db = get_db()
-        db.execute('insert into Users (email, password, firstname, lastname, birthdate, description, rating) values (?,?,?,?,?,?,?)', values)
+        db.execute('insert into Users (email, password, firstname, lastname, birthdate, description, rating, feedbacks) values (?,?,?,?,?,?,?,?)', values)
         db.commit()
         return '{"status":"OK"}'
     except:
@@ -187,7 +189,8 @@ def registerOrganisation():
         request_dict['password'],
         request_dict['name'],
         request_dict['description'],
-        "5.0"]
+        "5",
+        "10"]
 
         #TO-DO description can be null
         for element in values:
@@ -200,7 +203,7 @@ def registerOrganisation():
         return '{"status":"ERROR"}'
     try:
         db = get_db()
-        db.execute('insert into Organisations (email, password, name, description, rating) values (?,?,?,?,?)', values)
+        db.execute('insert into Organisations (email, password, name, description, rating, feedbacks) values (?,?,?,?,?,?)', values)
         db.commit()
         return '{"status":"OK"}'
     except:
@@ -1138,7 +1141,150 @@ def downloadFile():
     except KeyError:
         print("Invalid data", sys.stderr)
         return '{"status":"ERROR"}'
+
+@app.route('/canGiveFeedback', methods=['POST'])
+def canGiveFeedback():
+    request_dict = request.get_json()
     
+    if request_dict == None:
+        print("[ ERROR ] Invalid json", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    event = request_dict["event"]
+
+    if event == "":
+        print("[ ERROR ] Invalid event name", sys.stderr)
+        return '{"status":"ERROR"}'
+    try:
+        db = get_db()
+        cur = db.cursor()
+
+        cur.execute('select date from Events where name = ?', (event,))
+        date = cur.fetchone()
+
+        if date == None:
+            print("No such event exists", sys.stderr)
+            return '{"status":"ERROR"}'
+
+        currentDT = datetime.datetime.now()
+        print (str(currentDT), sys.stderr)
+        print (str(date[0]), sys.stderr)
+        try:
+            convertedDate =  datetime.datetime.strptime(date[0], '%d.%m.%Y').strftime('%Y-%m-%d')
+            convertedDate1 =  datetime.datetime.strptime(convertedDate, '%Y-%m-%d')
+            if currentDT > convertedDate1:
+                return '{"status":"OK"}'
+        except ValueError:
+            try:
+                convertedDate1 =  datetime.datetime.strptime(date[0], '%Y-%m-%d')
+                if currentDT > convertedDate1:
+                    return '{"status":"OK"}'
+            except ValueError:
+                return '{"status":"ERROR"}'
+
+        return '{"status":"ERROR"}'
+        
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
+
+@app.route('/postFeedback', methods=['POST'])
+def postFeedback():
+    request_dict = request.get_json()
+    
+    if request_dict == None:
+        print("[ ERROR ] Invalid json", sys.stderr)
+        return '{"status":"ERROR"}'
+
+    feedbacktype = request_dict["forThis"]
+    print(feedbacktype, sys.stderr)
+    email = request_dict["email"]
+    rating = request_dict["rating"]
+    description = request_dict["description"]
+    print(email, sys.stderr)
+
+    if feedbacktype == "" or email == "" or rating == "" or description == "":
+        print("[ ERROR ] Invalid event name", sys.stderr)
+        return '{"status":"ERROR"}'
+    try:
+        db = get_db()
+        cur = db.cursor()
+        if feedbacktype == "volunteer":
+            cur.execute('select userId,rating,feedbacks from users where email = ?', (email,))
+            userid = cur.fetchone()
+
+            if userid[0] == None:
+                print("No such user exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+            ratingold = userid[1]
+            if ratingold == None:
+                ratingold = 5
+
+            feedbacks = userid[2]
+            if feedbacks == None:
+                feedbacks = 10
+            
+            if float(rating)>0 and float(rating)<=5:
+                newrating = (float(feedbacks) * float(ratingold) + float(rating)) / (float(feedbacks)+1)
+                print(newrating)
+                db.execute('update users set rating=?, feedbacks=? where userId=?', (newrating, int(feedbacks)+1, userid[0]))
+                db.commit()
+
+                db.execute('insert into Feedback (rating, description) values (?,?)', (rating, description))
+                db.commit()
+                
+                cur.execute('select feedbackId from feedback where rating = ? and description = ?', (rating, description))
+                feedbackid = cur.fetchone()
+
+                db.execute('insert into UserFeedback (userId, feedbackId ) values (?,?)', (userid[0], feedbackid[0]))
+                db.commit()
+                return '{"status":"OK"}'
+
+        if feedbacktype == "organization":
+            cur.execute('select organisationId,rating,feedbacks from Organisations where email = ?', (email,))
+            orgid = cur.fetchone()
+
+            if orgid[0] == None:
+                print("No such org exists", sys.stderr)
+                return '{"status":"ERROR"}'
+
+
+            feedbacks = orgid[2]
+            if feedbacks == None:
+                feedbacks = 10
+
+            ratingold = orgid[1]
+            if ratingold == None:
+                ratingold = 5
+            
+            
+            if float(rating)>0 and float(rating)<=5:
+                newrating = (float(feedbacks) * float(ratingold) + float(rating)) / (float(feedbacks)+1)
+                print(newrating, sys.stderr)
+
+                db.execute('update Organisations set rating=?,feedbacks=? where organisationId=?', (float(newrating), int(feedbacks)+1, orgid[0]))
+                db.commit()
+
+                db.execute('insert into Feedback (rating, description) values (?,?)', (rating, description))
+                db.commit()
+                
+                cur.execute('select feedbackId from feedback where rating = ? and description = ?', (rating, description))
+                feedbackid = cur.fetchone()
+
+                db.execute('insert into OrganizationFeedback (organizationId, feedbackId) values (?,?)', (orgid[0], feedbackid[0]))
+                db.commit()
+                return '{"status":"OK"}'
+
+        return '{"status":"ERROR"}'
+
+        
+
+
+        
+    except KeyError:
+        print("Invalid data", sys.stderr)
+        return '{"status":"ERROR"}'
 
 if __name__ == '__main__':
     
